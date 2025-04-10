@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🦷 Dental X-ray Abnormality Detector</title>
+</head>
+<body style="font-family: Arial; text-align: center; margin-top: 50px;">
+  <h2>🦷 Dental X-ray Abnormality Detection</h2>
+  <p>Upload a dental X-ray image to check for abnormalities.</p>
+  
+  <input type="file" id="fileInput" accept="image/*"><br><br>
+  <button onclick="sendImage()">Upload & Detect</button>
+  
+  <h3 id="result" style="color: darkblue; margin-top: 20px;"></h3>
+
+  <script>
+    async function sendImage() {
+      const input = document.getElementById('fileInput');
+      if (!input.files.length) {
+        alert("Please choose an image first.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", input.files[0]);
+
+      const res = await fetch("/predict", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      document.getElementById("result").innerHTML = 
+        `🧠 Status: <strong>${data.status}</strong><br>🔍 Reconstruction Error: ${data.reconstruction_error.toFixed(5)}`;
+    }
+  </script>
+</body>
+</html>
